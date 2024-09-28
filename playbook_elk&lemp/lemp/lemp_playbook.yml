@@ -1,0 +1,99 @@
+---
+- hosts: all
+  become: true
+  vars:
+    mysql_root_password: "password123"
+#    mysql_database: "test_db"
+#    mysql_user: "dbuser"
+#    mysql_password: "password"
+    nginx_conf_src: "./templates/nginx.conf"
+
+  tasks:
+    # Обновляем и устанавливаем необходимые пакеты
+    - name: Обновить apt cache
+      apt:
+        update_cache: yes
+
+    - name: Установить Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Установить MySQL сервер
+      apt:
+        name: mysql-server
+        state: present
+
+    - name: Установить PHP и необходимые расширения
+      apt:
+        name:
+          - php-fpm
+          - php-mysql
+          - php-cli
+          - php-curl
+          - php-gd
+        state: present
+
+    # Обновить apt cache и установить MySQL сервер
+    - name: "Install mysql via apt"
+      ansible.builtin.apt:
+        name: "mysql-server"
+        state: "latest"
+        update_cache: true
+
+    # Установка PyMySQL для работы с модулями MySQL
+    - name: "Install pymysql via apt"
+      ansible.builtin.apt:
+        name: "python3-pymysql"
+        state: "latest"
+        update_cache: true
+
+    # Настройка root пользователя MySQL
+    - name: "Set up root user"
+      community.mysql.mysql_user:
+        name: "root"
+        password: "{{ mysql_root_password }}"
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+        check_implicit_admin: true
+        login_unix_socket: "/var/run/mysqld/mysqld.sock"
+
+    # Удалить анонимных пользователей
+    - name: "Remove anonymous users"
+      community.mysql.mysql_user:
+        name: ""  # анонимные пользователи
+        state: "absent"
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+
+    # Удалить тестовую базу данных
+    - name: "Remove test database"
+      community.mysql.mysql_db:
+        name: "test"
+        state: "absent"
+        login_user: "root"
+        login_password: "{{ mysql_root_password }}"
+
+    # Установка Nginx
+    - name: "Install nginx"
+      ansible.builtin.apt:
+        name: "nginx"
+        state: "latest"
+        update_cache: true
+
+
+    - name: Проверить конфигурацию Nginx
+      command: nginx -t
+      notify: restart nginx
+
+    - name: Убедиться, что Nginx запущен
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

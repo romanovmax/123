@@ -1,0 +1,173 @@
+Sep 28, 2024 @ 21:51:36.832
+{
+  "@timestamp": [
+    "2024-09-28T18:51:36.832Z"
+  ],
+  "agent.ephemeral_id": [
+    "489dee8a-3de7-465d-816b-3a43a90f165b"
+  ],
+  "agent.ephemeral_id.keyword": [
+    "489dee8a-3de7-465d-816b-3a43a90f165b"
+  ],
+  "agent.id": [
+    "bca06515-efb2-4756-b75e-c220bd386a36"
+  ],
+  "agent.id.keyword": [
+    "bca06515-efb2-4756-b75e-c220bd386a36"
+  ],
+  "agent.name": [
+    "ubu2"
+  ],
+  "agent.name.keyword": [
+    "ubu2"
+  ],
+  "agent.type": [
+    "filebeat"
+  ],
+  "agent.type.keyword": [
+    "filebeat"
+  ],
+  "agent.version": [
+    "8.15.1"
+  ],
+  "agent.version.keyword": [
+    "8.15.1"
+  ],
+  "ecs.version": [
+    "8.0.0"
+  ],
+  "ecs.version.keyword": [
+    "8.0.0"
+  ],
+  "host.name": [
+    "ubu2"
+  ],
+  "host.name.keyword": [
+    "ubu2"
+  ],
+  "input.type": [
+    "filestream"
+  ],
+  "input.type.keyword": [
+    "filestream"
+  ],
+  "log.file.device_id": [
+    "64768"
+  ],
+  "log.file.device_id.keyword": [
+    "64768"
+  ],
+  "log.file.inode": [
+    "397452"
+  ],
+  "log.file.inode.keyword": [
+    "397452"
+  ],
+  "log.file.path": [
+    "/var/log/nginx/access.log"
+  ],
+  "log.file.path.keyword": [
+    "/var/log/nginx/access.log"
+  ],
+  "log.offset": [
+    591
+  ],
+  "message": [
+    "192.168.146.1 - - [28/Sep/2024:18:51:30 +0000] \"GET / HTTP/1.1\" 304 0 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36\""
+  ],
+  "message.keyword": [
+    "192.168.146.1 - - [28/Sep/2024:18:51:30 +0000] \"GET / HTTP/1.1\" 304 0 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36\""
+  ],
+  "_id": "meT5OZIB730QVXPOhSQW",
+  "_index": "filebeat-8.15.1",
+  "_score": null
+
+
+
+Sep 28, 2024 @ 21:35:06.831
+{
+  "@timestamp": [
+    "2024-09-28T18:35:06.831Z"
+  ],
+  "agent.ephemeral_id": [
+    "489dee8a-3de7-465d-816b-3a43a90f165b"
+  ],
+  "agent.ephemeral_id.keyword": [
+    "489dee8a-3de7-465d-816b-3a43a90f165b"
+  ],
+  "agent.id": [
+    "bca06515-efb2-4756-b75e-c220bd386a36"
+  ],
+  "agent.id.keyword": [
+    "bca06515-efb2-4756-b75e-c220bd386a36"
+  ],
+  "agent.name": [
+    "ubu2"
+  ],
+  "agent.name.keyword": [
+    "ubu2"
+  ],
+  "agent.type": [
+    "filebeat"
+  ],
+  "agent.type.keyword": [
+    "filebeat"
+  ],
+  "agent.version": [
+    "8.15.1"
+  ],
+  "agent.version.keyword": [
+    "8.15.1"
+  ],
+  "ecs.version": [
+    "8.0.0"
+  ],
+  "ecs.version.keyword": [
+    "8.0.0"
+  ],
+  "host.name": [
+    "ubu2"
+  ],
+  "host.name.keyword": [
+    "ubu2"
+  ],
+  "input.type": [
+    "filestream"
+  ],
+  "input.type.keyword": [
+    "filestream"
+  ],
+  "log.file.device_id": [
+    "64768"
+  ],
+  "log.file.device_id.keyword": [
+    "64768"
+  ],
+  "log.file.inode": [
+    "397452"
+  ],
+  "log.file.inode.keyword": [
+    "397452"
+  ],
+  "log.file.path": [
+    "/var/log/nginx/access.log"
+  ],
+  "log.file.path.keyword": [
+    "/var/log/nginx/access.log"
+  ],
+  "log.offset": [
+    0
+  ],
+  "message": [
+    "192.168.146.165 - - [28/Sep/2024:18:19:47 +0000] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/7.68.0\""
+  ],
+  "message.keyword": [
+    "192.168.146.165 - - [28/Sep/2024:18:19:47 +0000] \"GET / HTTP/1.1\" 200 612 \"-\" \"curl/7.68.0\""
+  ],
+  "_id": "leTqOZIB730QVXPOaSTy",
+  "_index": "filebeat-8.15.1",
+  "_score": null
+}
+}
+
+
