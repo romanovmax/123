@@ -1,0 +1,208 @@
+---
+- name: Конфигурация Ubuntu1-Ubuntu2
+  hosts: all
+  become: yes  
+  tasks:
+    - name: Разрешить HTTP
+      ansible.posix.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+
+    - name: Разрешить HTTPS
+      ansible.posix.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 443
+        jump: ACCEPT
+
+    - name: Разрешить SSH
+      ansible.posix.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 22
+        jump: ACCEPT
+
+    - name: Разрешить Elasticsearch
+      ansible.posix.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 9200
+        jump: ACCEPT
+
+    - name: Разрешить Logstash_Filebeat
+      ansible.posix.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 5044
+        jump: ACCEPT
+
+    - name: Разрешить Kibana
+      ansible.posix.iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 5601
+        jump: ACCEPT
+
+    - name: Разрешить исходящий трафик на порт 80
+      ansible.posix.iptables:
+        chain: OUTPUT
+        protocol: tcp
+        destination_port: 80
+        jump: ACCEPT
+
+    - name: Set default policy for INPUT to DROP
+      ansible.posix.iptables:
+        chain: INPUT
+        policy: DROP
+
+    - name: Set default policy for FORWARD to DROP
+      ansible.posix.iptables:
+        chain: FORWARD
+        policy: DROP
+
+    - name: Set default policy for OUTPUT to ACCEPT
+      ansible.posix.iptables:
+        chain: OUTPUT
+        policy: ACCEPT
+
+    - name: Сохранил правила
+      ansible.builtin.command: iptables-save > /etc/iptables/rules.v4
+      args:
+        warn: false
+    - name: Set rp_filter for anti-spoofing
+      ansible.posix.sysctl:
+        name: net.ipv4.conf.all.rp_filter
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Set default rp_filter for anti-spoofing
+      ansible.posix.sysctl:
+        name: net.ipv4.conf.default.rp_filter
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Отключить ping ответы
+      ansible.posix.sysctl:
+        name: net.ipv4.icmp_echo_ignore_all
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Включить SYN cookies
+      ansible.posix.sysctl:
+        name: net.ipv4.tcp_syncookies
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Отключить source routing
+      ansible.posix.sysctl:
+        name: net.ipv4.conf.all.accept_source_route
+        value: 0
+        state: present
+        reload: yes
+
+    - name: Отключить redirects
+      ansible.posix.sysctl:
+        name: net.ipv4.conf.all.accept_redirects
+        value: 0
+        state: present
+        reload: yes
+
+    - name: Включить secure redirects
+      ansible.posix.sysctl:
+        name: net.ipv4.conf.all.secure_redirects
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Максимум открытых файлов
+      ansible.posix.sysctl:
+        name: fs.file-max
+        value: 2097152
+        state: present
+        reload: yes
+
+    - name: Set tcp_keepalive_time
+      ansible.posix.sysctl:
+        name: net.ipv4.tcp_keepalive_time
+        value: 600
+        state: present
+        reload: yes
+
+    - name: Set tcp_keepalive_intvl
+      ansible.posix.sysctl:
+        name: net.ipv4.tcp_keepalive_intvl
+        value: 60
+        state: present
+        reload: yes
+
+    - name: Set tcp_keepalive_probes
+      ansible.posix.sysctl:
+        name: net.ipv4.tcp_keepalive_probes
+        value: 5
+        state: present
+        reload: yes
+
+    - name: Отключить IPv6
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.disable_ipv6
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Отключить IPv6 по умолчанию
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.default.disable_ipv6
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Отключить IPv6 on loopback
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.lo.disable_ipv6
+        value: 1
+        state: present
+        reload: yes
+
+    - name: Установить fail2ban
+      ansible.builtin.apt:
+        name: fail2ban
+        state: present
+        update_cache: yes
+
+    - name: Скопировать настройки fail2ban
+      shell: cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+    - name: Добавить настройки ssh в fail2ban
+      shell: echo /etc/ansible/playbook_security/config/fail2ban.txt >> /etc/fail2ban/jail.local
+
+    - name: Перезапустить Fail2Ban
+      ansible.builtin.systemd:
+        name: fail2ban
+        state: restarted
+
+    - name: Установить libpam-pwquality
+      ansible.builtin.apt:
+        name: libpam-pwquality
+        state: present
+        update_cache: yes
+
+    - name: Configure PAM for password policy
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-password
+        regexp: '^password requisite pam_pwquality.so'
+        line: 'password requisite pam_pwquality.so retry=3 minlen=6'
+
+    - name: Configure pwquality settings
+      ansible.builtin.copy:
+        dest: /etc/security/pwquality.conf
+        content: |
+          minlength = 6
+          minclass = 3
+          maxrepeat = 3
+          dictpath = /usr/share/dict/words
